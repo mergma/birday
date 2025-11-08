@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #222;
+            color: white;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .info {
+            background: #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Test Page</h1>
+    
+    <div class="info">
+        <h3>Audio File Info:</h3>
+        <p>Path: audio/Jamrud.mp3</p>
+        <p id="file-size">Size: Checking...</p>
+        <p id="file-exists">Exists: Checking...</p>
+    </div>
+
+    <div class="info">
+        <h3>Direct Audio Element Test:</h3>
+        <audio controls preload="auto" id="direct-audio">
+            <source src="audio/Jamrud.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <div class="info">
+        <h3>JavaScript Audio Test:</h3>
+        <button onclick="testJSAudio()">Test JavaScript Audio</button>
+        <button onclick="testAutoplay()">Test Autoplay</button>
+        <div id="js-results"></div>
+    </div>
+
+    <div class="info">
+        <h3>Console Output:</h3>
+        <div id="console-output" style="background: #111; padding: 10px; font-family: monospace; max-height: 200px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        // Redirect console.log to display on page
+        const originalLog = console.log;
+        const originalError = console.error;
+        const consoleOutput = document.getElementById('console-output');
+        
+        function addToConsole(message, type = 'log') {
+            const div = document.createElement('div');
+            div.style.color = type === 'error' ? '#ff6b6b' : '#4ecdc4';
+            div.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            consoleOutput.appendChild(div);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+
+        // Test file existence
+        fetch('audio/Jamrud.mp3', { method: 'HEAD' })
+            .then(response => {
+                document.getElementById('file-exists').textContent = 'Exists: ' + (response.ok ? 'YES' : 'NO');
+                if (response.ok) {
+                    const size = response.headers.get('content-length');
+                    document.getElementById('file-size').textContent = 'Size: ' + (size ? (Math.round(size / 1024 / 1024 * 100) / 100) + ' MB' : 'Unknown');
+                }
+            })
+            .catch(error => {
+                document.getElementById('file-exists').textContent = 'Exists: ERROR - ' + error.message;
+            });
+
+        // Test direct audio element
+        const directAudio = document.getElementById('direct-audio');
+        directAudio.addEventListener('loadeddata', () => {
+            console.log('Direct audio loaded successfully');
+        });
+        directAudio.addEventListener('error', (e) => {
+            console.error('Direct audio error:', e);
+        });
+
+        // JavaScript audio test
+        function testJSAudio() {
+            console.log('Testing JavaScript Audio object...');
+            const audio = new Audio('audio/Jamrud.mp3');
+            
+            audio.addEventListener('loadeddata', () => {
+                console.log('JS Audio loaded successfully');
+                console.log('Duration:', audio.duration);
+                console.log('Ready state:', audio.readyState);
+            });
+            
+            audio.addEventListener('error', (e) => {
+                console.error('JS Audio error:', e);
+                console.error('Error details:', {
+                    error: e.target.error,
+                    networkState: audio.networkState,
+                    readyState: audio.readyState
+                });
+            });
+            
+            audio.addEventListener('canplay', () => {
+                console.log('JS Audio can play');
+            });
+            
+            audio.load();
+        }
+
+        // Test autoplay
+        function testAutoplay() {
+            console.log('Testing autoplay...');
+            const audio = new Audio('audio/Jamrud.mp3');
+            audio.volume = 0.7;
+            
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log('Autoplay SUCCESS!');
+                    })
+                    .catch((error) => {
+                        console.error('Autoplay FAILED:', error);
+                    });
+            }
+        }
+
+        // Auto-run tests
+        setTimeout(() => {
+            console.log('Running automatic tests...');
+            testJSAudio();
+        }, 1000);
+    </script>
+</body>
+</html>
