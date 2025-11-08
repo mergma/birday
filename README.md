@@ -1,22 +1,23 @@
-# Birthday Website with Animated Intro
+# Birthday Website with Animated Intro & Terms of Chaos
 
-A beautiful animated intro website that plays audio when everything is loaded and automatically scrolls to the main content.
+A hilarious animated intro website with goofy terms of agreement that plays epic Jamrud music and automatically scrolls to the main content.
 
 ## Features
 
 - 🎨 **Animated Intro**: Beautiful 7-second animation sequence with gradient backgrounds and floating elements
-- 🎵 **Audio Playback**: Automatically plays audio when the intro animation completes
+- 🎉 **Terms of Chaos**: Hilarious terms of agreement popup with ridiculous clauses
+- 🎵 **Audio Playback**: Plays Jamrud music when user accepts the terms
 - 📱 **Responsive Design**: Works on all screen sizes
-- ⚡ **Auto-scroll**: Smoothly transitions to main content after intro
+- ⚡ **Auto-scroll**: Smoothly transitions to main content after terms acceptance
 - 🎯 **Skip Option**: Users can skip the intro by clicking anywhere or using the skip button
 
 ## Audio Setup
 
 To add your own audio file:
 
-1. **Add your audio file** to the project directory with one of these names:
-   - `birthday-audio.mp3` (recommended)
-   - `birthday-audio.wav`
+1. **Add your audio file** to the `audio/` directory:
+   - Current file: `audio/Jamrud.mp3`
+   - Supports MP3, WAV, and OGG formats
    - `birthday-audio.ogg`
 
 2. **Supported formats**:
@@ -95,4 +96,4 @@ this.animationDuration = 7000; // 7 seconds in milliseconds
 - Safari 12+
 - Edge 79+
 
-Enjoy your animated birthday website! 🎉
+Enjoy your animated birthday website with Terms of Chaos! 🎉
